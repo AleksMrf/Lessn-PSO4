@@ -16,6 +16,7 @@ def search_wikipedia(driver, query):
     search_box.send_keys(query)
     search_box.send_keys(Keys.RETURN)
     time.sleep(2)  # Ждём загрузки страницы
+    return driver.current_url  # Возвращаем URL первой страницы
 
 def get_paragraphs(driver):
     """Получает параграфы текущей статьи"""
@@ -32,13 +33,14 @@ def main():
     driver = init_driver()
     try:
         query = input("Введите запрос для поиска на Википедии: ")
-        search_wikipedia(driver, query)
+        original_url = search_wikipedia(driver, query)
 
         while True:
             print("\nЧто вы хотите сделать?")
             print("1. Листать параграфы текущей статьи")
             print("2. Перейти на связанную статью")
-            print("3. Выйти из программы")
+            print("3. Вернуться к первоначальному запросу")
+            print("4. Выйти из программы")
 
             choice = input("Ваш выбор: ")
 
@@ -68,6 +70,11 @@ def main():
                     print("Связанные статьи не найдены.")
 
             elif choice == "3":
+                driver.get(original_url)
+                time.sleep(2)  # Ждём загрузки страницы
+                print("Возвращаемся к первоначальному запросу.")
+
+            elif choice == "4":
                 print("Выход из программы.")
                 break
 
